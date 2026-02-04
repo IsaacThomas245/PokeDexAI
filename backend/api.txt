@@ -1,0 +1,62 @@
+
+type	data source
+move	/move/
+type	/type/
+pokemon	/pokemon/
+ability	/ability/
+evolution	/pokemon-species/
+text	fallback / clarification
+
+
+examples
+{
+  "role": "assistant",
+  "content": "Thunderbolt is a powerful Electric-type move that may paralyze the target.",
+  "type": "move",
+  "data": {
+    "name": "thunderbolt",
+    "power": 90,
+    "accuracy": 100,
+    "type": "electric",
+    "category": "special",
+    "effect": "May paralyze the target."
+  }
+}
+
+{
+  "role": "assistant",
+  "content": "Fire-type moves are strong against Grass, Ice, Bug, and Steel Pokémon.",
+  "type": "type",
+  "data": {
+    "double_damage_to": ["grass", "ice", "bug", "steel"],
+    "double_damage_from": ["water", "rock", "ground"],
+    "half_damage_to": ["fire", "water", "rock", "dragon"],
+    "half_damage_from": ["fire", "grass", "ice", "bug", "steel", "fairy"],
+    "no_damage_to": [],
+    "no_damage_from": []
+  }
+}
+
+{
+  "role": "assistant",
+  "content": "Pikachu is an Electric-type Pokémon known for its speed.",
+  "type": "pokemon",
+  "data": {
+    "types": ["electric"],
+    "stats": {
+      "hp": 35,
+      "attack": 55,
+      "speed": 90
+    },
+    "abilities": ["static", "lightning-rod"],
+    "moves": ["thunderbolt", "quick-attack"]
+  }
+}
+
+{
+  "role": "assistant",
+  "content": "I couldn’t find a move called Thundrbolt. Did you mean Thunderbolt?",
+  "type": "error",
+  "data": null
+}
+
