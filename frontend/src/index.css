@@ -1,19 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@100..900&display=swap')
+@import url("https://fonts.googleapis.com/css2?family=Urbanist:wght@100..900&display=swap")
 layer(base);
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap')
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap")
 layer(base);
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @theme {
   --font-*: initial;
   --font-sans: Open Sans, sans-serif;
   --font-urbanist: Urbanist, sans-serif;
 
-  --color-primary-blue: rgb(146, 179, 202);
+  --color-primary-blue: rgb(28, 199, 199);
   --color-primary-orange: rgb(243, 195, 177);
   --color-main-text: rgb(0, 43, 49);
-  --color-error-red: rgb(208, 69, 82);
+  --color-error-red: rgb(229, 57, 53);
 
   --animate-spinner: spinner 1.5s linear infinite;
   --animate-spinner-delayed: spinner 1.5s linear infinite 0.75s;
@@ -94,7 +94,9 @@ layer(base);
 }
 
 @layer base {
-  body, html, #root {
+  body,
+  html,
+  #root {
     @apply text-main-text h-full;
   }
 
