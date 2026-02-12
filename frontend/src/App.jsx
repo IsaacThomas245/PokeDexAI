@@ -1,6 +1,5 @@
 import Chatbot from "@/components/Chatbot";
 import logo from "@/assets/images/logo.svg";
-import test2 from "@/assets/images/test2.svg";
 
 function App() {
   return (
@@ -8,7 +7,7 @@ function App() {
       <header className="sticky top-0 shrink-0 z-20 bg-white">
         <div className="flex flex-col h-full w-full gap-1 pt-4 pb-2">
           <a href="http://localhost:3000/">
-            <img src={test2} className="w-32" alt="logo" />
+            <img src={logo} className="w-32" alt="logo" />
           </a>
         </div>
       </header>
