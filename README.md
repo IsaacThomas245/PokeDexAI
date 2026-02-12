@@ -77,10 +77,10 @@ Handles greetings and simple conversational prompts.
 ---
 
 ## Architecture
-frontend/     → React (Vite) UI
-backend/      → Flask API
-nlp/          → Intent classifier using OpenAI
-pokeapi/      → Wrapper around PokéAPI with normalization helpers
+- frontend/     → React (Vite) UI
+- backend/      → Flask API
+- nlp/          → Intent classifier using OpenAI
+- pokeapi/      → Wrapper around PokéAPI with normalization helpers
 
 
 ### Backend Endpoints
@@ -126,15 +126,15 @@ The classifier includes logic for:
 
 Backend:
 
-cd backend
-pip install -r requirements.txt
-python app.py
+- cd backend
+- pip install -r requirements.txt
+- python app.py
 
 Frontend:
 
-cd frontend
-npm install
-npm run dev
+- cd frontend
+- npm install
+- npm run dev
 
 ---
 
