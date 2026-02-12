@@ -6,6 +6,20 @@ The system provides structured, game‑accurate Pokémon data through natural‑
 
 ---
 
+## Deployment
+Pokedex AI is deployed using a split‑service architecture:
+
+- Frontend  
+Hosted on Vercel  
+https://pokedexai.me
+
+- Backend API  
+Hosted on Render  
+https://api.pokedexai.me
+This service powers all data retrieval, NLP routing, PokéAPI normalization, and structured responses.
+
+The live deployment reflects the current state of the project and updates automatically as new features are pushed to the main branch.
+
 ## Features (Current)
 
 ### Natural Language Querying
