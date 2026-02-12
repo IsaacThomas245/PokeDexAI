@@ -1,5 +1,7 @@
 # Pokedex AI
 
+**Live Site:** [https://pokedexai.me](https://pokedexai.me)
+
 Pokedex AI is a full‑stack AI‑powered Pokémon assistant built with Flask, React, and an OpenAI‑driven NLP classifier.
 
 The system provides structured, game‑accurate Pokémon data through natural‑language queries. It supports move details, defensive type matchups, Pokémon summaries, ability information (including hidden abilities), and basic evolution chains. The project emphasizes clean API design, real Pokémon mechanics, and a conversational interface.
