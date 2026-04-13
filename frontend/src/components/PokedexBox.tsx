@@ -5,10 +5,15 @@ export default function PokedexBox({
   color = "red",
   className = "",
 }) {
+  const colorClass =
+    color === "primary-blue"
+      ? "primary-blue"
+      : color === "blue"
+        ? "blue"
+        : "red";
+
   return (
-    <div
-      className={`pokedex-panel ${color === "blue" ? "blue" : ""} ${className}`}
-    >
+    <div className={`pokedex-panel ${colorClass} ${className}`}>
       <div className="pokedex-header-lights">
         <div className="pokedex-light blue" />
         <div className="pokedex-light yellow" />

@@ -3,11 +3,9 @@ import React from "react";
 export default function MessageMoves({ moves }) {
   if (!moves || moves.length === 0) return null;
 
-  // Normalize method names
   const pretty = (method) =>
     method.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
-  // Group moves by method
   const levelUpMoves = moves
     .filter((m) => m.method === "level-up")
     .sort((a, b) => a.level - b.level);
@@ -42,7 +40,7 @@ export default function MessageMoves({ moves }) {
     <div>
       <strong>Moves:</strong>
 
-      <div className="max-h-64 overflow-y-auto mt-2 border border-red-700/40 rounded p-3 bg-black/30 space-y-4 text-white">
+      <div className="max-h-64 overflow-y-auto mt-2 border border-primary-blue rounded p-3 bg-black/30 space-y-4 text-white">
         {renderGroup("Level-Up Moves", levelUpMoves, (m) => `Lv ${m.level}`)}
         {renderGroup("TM / Machine Moves", machineMoves, () => "TM")}
         {renderGroup("Egg Moves", eggMoves, () => "Egg")}

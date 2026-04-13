@@ -21,7 +21,9 @@ function ChatMessages({ messages, isLoading }) {
           <div
             key={idx}
             className={`flex items-start gap-4 w-full ${
-              role === "user" ? "py-4 px-3 rounded-xl bg-red-900/40 text-white" : ""
+              role === "user"
+                ? "py-4 px-3 rounded-xl bg-primary-blue/15 shadow-[0_0_8px_rgba(28,199,199,0.3)]"
+                : ""
             }`}
           >
             {role === "user" && (
@@ -31,6 +33,7 @@ function ChatMessages({ messages, isLoading }) {
                 alt="user"
               />
             )}
+
             <div className="flex-1">
               <div className="markdown-container w-full">
                 {loading && !content ? (
@@ -38,7 +41,7 @@ function ChatMessages({ messages, isLoading }) {
                 ) : role === "assistant" ? (
                   <>
                     {(content || data) && (
-                      <PokedexBox className="w-full">
+                      <PokedexBox className="w-full" color="primary-blue">
                         <Markdown>{content}</Markdown>
 
                         {type === "pokemon" && <MessagePokemon data={data} />}
@@ -54,7 +57,9 @@ function ChatMessages({ messages, isLoading }) {
                     )}
                   </>
                 ) : (
-                  <div className="whitespace-pre-line text-white">{content}</div>
+                  <div className="whitespace-pre-line text-primary-blue/90">
+                    {content}
+                  </div>
                 )}
               </div>
 

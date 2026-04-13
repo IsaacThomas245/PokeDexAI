@@ -1,7 +1,9 @@
 <svg
   width="512"
   height="512"
-  viewBox="0 0 512 512"
+  viewBox="0 60 512 300"
+
+
   xmlns="http://www.w3.org/2000/svg"
 >
   <!-- Teal ring -->
@@ -70,35 +72,4 @@
     stroke="#1CC7C7"
     stroke-width="4"
   />
-
-  <!-- Network nodes inside bubble -->
-  <circle cx="315" cy="150" r="5" fill="#1CC7C7" />
-  <circle cx="355" cy="140" r="5" fill="#1CC7C7" />
-  <circle cx="380" cy="170" r="5" fill="#1CC7C7" />
-  <circle cx="340" cy="185" r="5" fill="#1CC7C7" />
-
-  <!-- Connecting lines -->
-  <path
-    d="M315 150 L355 140
-       M355 140 L380 170
-       M315 150 L340 185
-       M340 185 L380 170"
-    stroke="#1CC7C7"
-    stroke-width="3"
-    stroke-linecap="round"
-  />
-
-  <!-- Text: POKEDEX AI -->
-  <text
-    x="50%"
-    y="440"
-    text-anchor="middle"
-    font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-    font-size="44"
-    font-weight="700"
-    letter-spacing="4"
-  >
-    <tspan fill="#000000">POKE</tspan>
-    <tspan fill="#1CC7C7">DEX AI</tspan>
-  </text>
 </svg>
