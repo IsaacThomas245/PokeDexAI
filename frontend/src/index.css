@@ -125,7 +125,7 @@ layer(base);
   margin-top: 20px;
   color: white;
   box-shadow: 0 0 12px rgba(198, 40, 40, 0.6);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .pokedex-panel.blue {
@@ -158,3 +158,17 @@ layer(base);
   background: #e53935;
 }
 
+html,
+body {
+  background-color: #000 !important;
+  overscroll-behavior: none;
+}
+
+html {
+  background-color: #000 !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  overscroll-behavior-y: contain;
+}
