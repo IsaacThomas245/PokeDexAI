@@ -9,6 +9,7 @@ import MessageType from "./chat/MessageType";
 import MessageEvolution from "./chat/MessageEvolution";
 import MessageText from "./chat/MessageText";
 import MessageError from "./chat/MessageError";
+import PokedexBox from "./PokedexBox";
 
 function ChatMessages({ messages, isLoading }) {
   const scrollContentRef = useAutoScroll(isLoading);
@@ -19,7 +20,9 @@ function ChatMessages({ messages, isLoading }) {
         ({ role, content, type, data, loading, error: hasError }, idx) => (
           <div
             key={idx}
-            className={`flex items-start gap-4 py-4 px-3 rounded-xl ${role === "user" ? "bg-primary-blue/10" : ""}`}
+            className={`flex items-start gap-4 w-full ${
+              role === "user" ? "py-4 px-3 rounded-xl bg-red-900/40 text-white" : ""
+            }`}
           >
             {role === "user" && (
               <img
@@ -28,24 +31,30 @@ function ChatMessages({ messages, isLoading }) {
                 alt="user"
               />
             )}
-            <div>
-              <div className="markdown-container">
+            <div className="flex-1">
+              <div className="markdown-container w-full">
                 {loading && !content ? (
                   <Spinner />
                 ) : role === "assistant" ? (
                   <>
-                    <Markdown>{content}</Markdown>
+                    {(content || data) && (
+                      <PokedexBox className="w-full">
+                        <Markdown>{content}</Markdown>
 
-                    {type === "pokemon" && <MessagePokemon data={data} />}
-                    {type === "move" && <MessageMove data={data} />}
-                    {type === "ability" && <MessageAbility data={data} />}
-                    {type === "type" && <MessageType data={data} />}
-                    {type === "evolution" && <MessageEvolution data={data} />}
-                    {type === "text" && <MessageText data={data} />}
-                    {type === "error" && <MessageError />}
+                        {type === "pokemon" && <MessagePokemon data={data} />}
+                        {type === "move" && <MessageMove data={data} />}
+                        {type === "ability" && <MessageAbility data={data} />}
+                        {type === "type" && <MessageType data={data} />}
+                        {type === "evolution" && (
+                          <MessageEvolution data={data} />
+                        )}
+                        {type === "text" && <MessageText data={data} />}
+                        {type === "error" && <MessageError />}
+                      </PokedexBox>
+                    )}
                   </>
                 ) : (
-                  <div className="whitespace-pre-line">{content}</div>
+                  <div className="whitespace-pre-line text-white">{content}</div>
                 )}
               </div>
 

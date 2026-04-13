@@ -43,7 +43,7 @@ function Chatbot() {
     <div className="relative grow flex flex-col gap-6 pt-6">
       {messages.length === 0 && (
         <div className="mt-3 font-urbanist text-primary-blue text-xl font-light space-y-2">
-          <p>👋 Welcome to your Pokédex Assistant!</p>
+          <p>Welcome to your Pokédex Assistant!</p>
 
           <p>
             I'm your AI-powered guide to the world of Pokémon. Ask me about

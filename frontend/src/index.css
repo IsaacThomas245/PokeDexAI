@@ -116,3 +116,45 @@ layer(base);
     @apply bg-primary-blue/50 border border-white rounded-sm;
   }
 }
+
+.pokedex-panel {
+  background: #111; /* dark screen-like background */
+  border: 3px solid #c62828; /* red theme */
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  color: white;
+  box-shadow: 0 0 12px rgba(198, 40, 40, 0.6);
+  font-family: 'Inter', sans-serif;
+}
+
+.pokedex-panel.blue {
+  border-color: #1565c0;
+  box-shadow: 0 0 12px rgba(21, 101, 192, 0.6);
+}
+
+.pokedex-header-lights {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pokedex-light {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.pokedex-light.blue {
+  background: #4fc3f7;
+  box-shadow: 0 0 6px #4fc3f7;
+}
+
+.pokedex-light.yellow {
+  background: #ffeb3b;
+}
+
+.pokedex-light.red {
+  background: #e53935;
+}
+

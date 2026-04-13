@@ -30,7 +30,7 @@ export default function MessageMoves({ moves }) {
           {list.map((m, idx) => (
             <li key={idx} className="flex justify-between text-sm">
               <span className="font-medium">{m.name}</span>
-              <span className="text-gray-500">{formatter(m)}</span>
+              <span className="text-primary-blue">{formatter(m)}</span>
             </li>
           ))}
         </ul>
@@ -42,7 +42,7 @@ export default function MessageMoves({ moves }) {
     <div>
       <strong>Moves:</strong>
 
-      <div className="max-h-64 overflow-y-auto mt-2 border rounded p-3 bg-gray-50 space-y-4">
+      <div className="max-h-64 overflow-y-auto mt-2 border border-red-700/40 rounded p-3 bg-black/30 space-y-4 text-white">
         {renderGroup("Level-Up Moves", levelUpMoves, (m) => `Lv ${m.level}`)}
         {renderGroup("TM / Machine Moves", machineMoves, () => "TM")}
         {renderGroup("Egg Moves", eggMoves, () => "Egg")}
