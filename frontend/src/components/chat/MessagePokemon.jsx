@@ -4,10 +4,12 @@ import MessageMoves from "./MessageMoves";
 export default function MessagePokemon({ data }) {
   if (!data) return null;
 
-  const { types, stats, abilities, moves } = data;
+  const { types, stats, abilities, moves, sprite } = data;
 
   return (
     <div className="markdown-container mt-2 space-y-3 text-sm">
+      <img src={sprite}></img>
+
       <div>
         <strong>Types:</strong>
         <ul className="list-disc ml-5">

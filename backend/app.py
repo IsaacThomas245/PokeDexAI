@@ -41,7 +41,7 @@ def pokemon_summary(name):
         "types": [t["type"]["name"] for t in p["types"]],
         "stats": {s["stat"]["name"]: s["base_stat"] for s in p["stats"]},
         "abilities": [a["ability"]["name"] for a in p["abilities"]],
-        "moves": [m["move"]["name"] for m in p["moves"]]
+        "moves": [m["move"]["name"] for m in p["moves"]],
     }
 
 # given a pokemon name, return its evolution line
@@ -122,7 +122,8 @@ def chat():
                         "method": m["version_group_details"][0]["move_learn_method"]["name"]
                     }
                     for m in p["moves"]
-                ]
+                ],
+                "sprite": p["sprites"]["front_default"] or p["sprites"]["other"]["official-artwork"]["front_default"] or p["sprites"]["other"]["home"]["front_default"]
             }
         })
 
