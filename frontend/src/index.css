@@ -52,7 +52,7 @@ layer(base);
 }
 
 @utility spinner-child {
-  @apply absolute -top-1 left-0 h-full w-full content-[''] rounded-full bg-primary-orange opacity-0;
+  @apply absolute -top-1 left-0 h-full w-full content-[''] rounded-full bg-primary-blue opacity-0;
 }
 
 @utility markdown-container {
