@@ -8,11 +8,19 @@ export default function MessageMove({ data }) {
       <div>
         <strong>Name:</strong> {name}
       </div>
-      <div>
-        <strong>Type:</strong> {type}
+      <div className="flex gap-2 mt-1">
+        <strong>Type:</strong>
+        <img key={type} src={`/type_sprites/${type}.png`} alt={type} />
       </div>
       <div>
-        <strong>Category:</strong> {category}
+        <div className="flex gap-2 mt-1">
+          <strong>Category:</strong>
+          <img
+            key={category}
+            src={`/move_sprites/move-${category}.png`}
+            alt={category}
+          />
+        </div>
       </div>
       <div>
         <strong>Power:</strong> {power ?? "—"}

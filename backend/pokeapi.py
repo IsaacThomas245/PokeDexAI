@@ -4,6 +4,8 @@ import copy
 BASE_URL = "https://pokeapi.co/api/v2"
 REGIONAL_SUFFIXES = ["hisui", "galar", "alola", "paldea"]
 
+sprite_cache = {}
+
 def fetch_json(url):
     res = requests.get(url)
     if res.status_code != 200:
@@ -18,6 +20,20 @@ def get_english_entry(entries, key):
         if entry["language"]["name"] == "en":
             return entry.get(key)
     return None
+
+def get_sprite(name):
+    if name in sprite_cache:
+        return sprite_cache[name]
+    
+    p = get_pokemon(name)
+    s = p["sprites"]
+
+    sprite = s.get("front_default") or s["other"]["official-artwork"].get("front_default") or s["other"]["home"].get("front_default")
+    sprite_cache[name] = sprite
+
+    return (
+        sprite
+    )
 
 def format_evo_details(details):
     if not details:
@@ -100,6 +116,7 @@ def merge_evolution_data(chain, flat):
         # Attach details to each evolves_to entry
         for evo_node in node.get("evolves_to", []):
             target = evo_node["species"]["name"]
+            evo_node["species"]["sprite"] = get_sprite(target)
 
             # Find matching flat entry
             match = next((e for e in steps if e["to"] == target), None)
@@ -119,7 +136,7 @@ def merge_evolution_data(chain, flat):
                 evo_node.setdefault("regional_forms", [])
                 for r in regionals:
                     evo_node["regional_forms"].append({
-                        "species": {"name": r["to"]},
+                        "species": {"name": r["to"], "sprite": get_sprite(r["to"])},
                         "details": {
                             "trigger": r["trigger"],
                             "min_level": r["min_level"],
@@ -131,6 +148,7 @@ def merge_evolution_data(chain, flat):
 
             walk(evo_node)
 
+    chain["species"]["sprite"] = get_sprite(chain["species"]["name"])
     walk(chain)
     return chain
 

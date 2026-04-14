@@ -17,7 +17,12 @@ export default function MessageType({ data }) {
             <strong>4x Weak to:</strong>
             <ul className="list-disc ml-5">
               {data.quadruple_weak_to.map((t) => (
-                <li key={t}>{t}</li>
+                <img
+                  key={t}
+                  src={`/type_sprites/${t}.png`}
+                  alt={t}
+                  className="h-8 w-14"
+                />
               ))}
             </ul>
           </div>
@@ -28,7 +33,12 @@ export default function MessageType({ data }) {
             <strong>2x Weak to:</strong>
             <ul className="list-disc ml-5">
               {data.double_weak_to.map((t) => (
-                <li key={t}>{t}</li>
+                <img
+                  key={t}
+                  src={`/type_sprites/${t}.png`}
+                  alt={t}
+                  className="h-8 w-14"
+                />
               ))}
             </ul>
           </div>
@@ -39,7 +49,12 @@ export default function MessageType({ data }) {
             <strong>½× Resistant to:</strong>
             <ul className="list-disc ml-5">
               {data.half_resistant_to.map((t) => (
-                <li key={t}>{t}</li>
+                <img
+                  key={t}
+                  src={`/type_sprites/${t}.png`}
+                  alt={t}
+                  className="h-8 w-14"
+                />
               ))}
             </ul>
           </div>
@@ -50,7 +65,12 @@ export default function MessageType({ data }) {
             <strong>¼× Resistant to:</strong>
             <ul className="list-disc ml-5">
               {data.quarter_resistant_to.map((t) => (
-                <li key={t}>{t}</li>
+                <img
+                  key={t}
+                  src={`/type_sprites/${t}.png`}
+                  alt={t}
+                  className="h-8 w-14"
+                />
               ))}
             </ul>
           </div>
@@ -61,7 +81,12 @@ export default function MessageType({ data }) {
             <strong>Immune to:</strong>
             <ul className="list-disc ml-5">
               {data.immune_to.map((t) => (
-                <li key={t}>{t}</li>
+                <img
+                  key={t}
+                  src={`/type_sprites/${t}.png`}
+                  alt={t}
+                  className="h-8 w-14"
+                />
               ))}
             </ul>
           </div>
@@ -78,7 +103,12 @@ export default function MessageType({ data }) {
           <strong>Weak to:</strong>
           <ul className="list-disc ml-5">
             {data.double_damage_from.map((t) => (
-              <li key={t}>{t}</li>
+              <img
+                key={t}
+                src={`/type_sprites/${t}.png`}
+                alt={t}
+                className="h-8 w-14"
+              />
             ))}
           </ul>
         </div>
@@ -89,7 +119,12 @@ export default function MessageType({ data }) {
           <strong>Resistant to:</strong>
           <ul className="list-disc ml-5">
             {data.half_damage_from.map((t) => (
-              <li key={t}>{t}</li>
+              <img
+                key={t}
+                src={`/type_sprites/${t}.png`}
+                alt={t}
+                className="h-8 w-14"
+              />
             ))}
           </ul>
         </div>
@@ -100,7 +135,12 @@ export default function MessageType({ data }) {
           <strong>Immune to:</strong>
           <ul className="list-disc ml-5">
             {data.no_damage_from.map((t) => (
-              <li key={t}>{t}</li>
+              <img
+                key={t}
+                src={`/type_sprites/${t}.png`}
+                alt={t}
+                className="h-8 w-14"
+              />
             ))}
           </ul>
         </div>

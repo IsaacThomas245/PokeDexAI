@@ -8,6 +8,8 @@ export default function MessageEvolution({ data }) {
       <li>
         {node.species.name}
 
+        <img src={node.species.sprite} alt="sprite" />
+
         {node.details && (
           <div className="ml-4 text-xs text-gray-500">
             {node.details?.text && (
@@ -21,7 +23,10 @@ export default function MessageEvolution({ data }) {
         {node.regional_forms && (
           <ul className="ml-5 list-disc">
             {node.regional_forms.map((rf, idx) => (
-              <li key={idx}>{rf.species.name} (regional form)</li>
+              <li key={idx}>
+                {rf.species.name} (regional form)
+                <img src={rf.species.sprite} alt="sprite" />
+              </li>
             ))}
           </ul>
         )}
