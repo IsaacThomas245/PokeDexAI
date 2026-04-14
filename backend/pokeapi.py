@@ -12,6 +12,9 @@ def fetch_json(url):
         raise ValueError(f"Request failed ({res.status_code}): {url}")
     return res.json()
 
+def safe_name(obj):
+    return obj["name"] if isinstance(obj, dict) and "name" in obj else None
+
 def normalize(name):
     return name.lower().replace(" ", "-")
 
@@ -35,34 +38,94 @@ def get_sprite(name):
         sprite
     )
 
-def format_evo_details(details):
-    if not details:
-        return None
+def format_evo_details(d):
+    parts = []
 
-    trigger = details.get("trigger")
-    item = details.get("item")
-    level = details.get("min_level")
-    time = details.get("time_of_day")
+    # Trigger
+    if d.get("trigger"):
+        parts.append(d["trigger"].replace("-", " ").title())
 
-    # Trade evolutions
-    if trigger == "trade":
-        if item:
-            return f"Trade while holding {item.replace('-', ' ').title()}"
-        return "Trade"
+    # Level
+    if d.get("min_level"):
+        parts.append(f"Level {d['min_level']}")
 
-    # Level evolutions
-    if level:
-        return f"Level {level}"
+    # Items
+    if d.get("item"):
+        parts.append(f"Use {d['item'].replace('-', ' ').title()}")
+    if d.get("held_item"):
+        parts.append(f"Holding {d['held_item'].replace('-', ' ').title()}")
 
-    # Item evolutions
-    if item:
-        return f"Use {item.replace('-', ' ').title()}"
+    # Moves
+    if d.get("known_move"):
+        parts.append(f"Knows move {d['known_move'].title()}")
+    if d.get("known_move_type"):
+        parts.append(f"Knows a {d['known_move_type'].title()}-type move")
 
-    # Time of day evolutions
-    if time:
-        return f"At {time.title()}"
+    # Location
+    if d.get("location"):
+        parts.append(f"At {d['location'].replace('-', ' ').title()}")
 
-    return None
+    # Friendship / beauty / affection
+    if d.get("min_happiness"):
+        parts.append(f"Happiness ≥ {d['min_happiness']}")
+    if d.get("min_beauty"):
+        parts.append(f"Beauty ≥ {d['min_beauty']}")
+    if d.get("min_affection"):
+        parts.append(f"Affection ≥ {d['min_affection']}")
+
+    # Weather
+    if d.get("needs_overworld_rain"):
+        parts.append("While raining")
+
+    # Party requirements
+    if d.get("party_species"):
+        parts.append(f"With {d['party_species'].title()} in party")
+    if d.get("party_type"):
+        parts.append(f"With a {d['party_type'].title()}-type in party")
+
+    # Stats
+    if d.get("relative_physical_stats") == 1:
+        parts.append("Attack > Defense")
+    elif d.get("relative_physical_stats") == 0:
+        parts.append("Attack = Defense")
+    elif d.get("relative_physical_stats") == -1:
+        parts.append("Attack < Defense")
+
+    # Time of day
+    if d.get("time_of_day"):
+        parts.append(d["time_of_day"].title())
+
+    # Trade
+    if d.get("trade_species"):
+        parts.append(f"Trade for {d['trade_species'].title()}")
+    elif d.get("trigger") == "trade":
+        parts.append("Trade")
+
+    # Special triggers
+    if d.get("turn_upside_down"):
+        parts.append("Turn console upside-down")
+    if d.get("needs_multiplayer"):
+        parts.append("Multiplayer required")
+
+    # Region / form
+    if d.get("region"):
+        parts.append(f"In {d['region'].title()}")
+    if d.get("base_form"):
+        parts.append(f"Must be in form {d['base_form'].title()}")
+
+    # Move usage
+    if d.get("used_move"):
+        parts.append(f"Use move {d['used_move'].title()}")
+    if d.get("min_move_count"):
+        parts.append(f"Use move {d['min_move_count']} times")
+
+    # Steps / damage
+    if d.get("min_steps"):
+        parts.append(f"Walk {d['min_steps']} steps")
+    if d.get("min_damage_taken"):
+        parts.append(f"Take {d['min_damage_taken']} damage")
+
+    return ", ".join(parts) if parts else None
 
 def parse_evolution_chain(chain):
     evolutions = []
@@ -72,24 +135,41 @@ def parse_evolution_chain(chain):
 
         for evo in node["evolves_to"]:
             to_species = evo["species"]["name"]
-            details = evo["evolution_details"][0] if evo["evolution_details"] else {}
+            raw = evo["evolution_details"][0] if evo["evolution_details"] else {}
+            
+            details = {
+                "trigger": safe_name(raw.get("trigger")),
+                "item": safe_name(raw.get("item")),
+                "held_item": safe_name(raw.get("held_item")),
+                "known_move": safe_name(raw.get("known_move")),
+                "known_move_type": safe_name(raw.get("known_move_type")),
+                "location": safe_name(raw.get("location")),
+                "party_species": safe_name(raw.get("party_species")),
+                "party_type": safe_name(raw.get("party_type")),
+                "trade_species": safe_name(raw.get("trade_species")),
+                "region": safe_name(raw.get("region")),
+                "base_form": safe_name(raw.get("base_form")),
+                "used_move": safe_name(raw.get("used_move")),
+                "min_level": raw.get("min_level"),
+                "min_happiness": raw.get("min_happiness"),
+                "min_beauty": raw.get("min_beauty"),
+                "min_affection": raw.get("min_affection"),
+                "needs_multiplayer": raw.get("needs_multiplayer"),
+                "needs_overworld_rain": raw.get("needs_overworld_rain"),
+                "relative_physical_stats": raw.get("relative_physical_stats"),
+                "time_of_day": raw.get("time_of_day"),
+                "min_move_count": raw.get("min_move_count"),
+                "min_steps": raw.get("min_steps"),
+                "min_damage_taken": raw.get("min_damage_taken"),
+            }
 
-            item = None
-            if details.get("item"):
-                item = details["item"]["name"]
-            elif details.get("held_item"):
-                item = details["held_item"]["name"]
-
+            item = details.get("item") or details.get("held_item")
 
             base_entry = {
                 "from": base_species,
                 "to": to_species,
-                "trigger": details.get("trigger", {}).get("name"),
-                "min_level": details.get("min_level"),
-                "item": item,
-                "time_of_day": details.get("time_of_day"),
+                **details, 
             }
-
 
             evolutions.append(base_entry)
 
@@ -122,13 +202,9 @@ def merge_evolution_data(chain, flat):
             match = next((e for e in steps if e["to"] == target), None)
 
             if match:
-                evo_node["details"] = {
-                    "trigger": match["trigger"],
-                    "min_level": match["min_level"],
-                    "item": match["item"],
-                    "time_of_day": match["time_of_day"]
-                }
-                evo_node["details"]["text"] = format_evo_details(evo_node["details"])
+                evo_node["details"] = match
+                evo_node["details"]["text"] = format_evo_details(match)
+
 
             # Add regional forms as extra branches
             regionals = [e for e in steps if e.get("region") and e["to"].startswith(target)]
@@ -137,13 +213,8 @@ def merge_evolution_data(chain, flat):
                 for r in regionals:
                     evo_node["regional_forms"].append({
                         "species": {"name": r["to"], "sprite": get_sprite(r["to"])},
-                        "details": {
-                            "trigger": r["trigger"],
-                            "min_level": r["min_level"],
-                            "item": r["item"],
-                            "time_of_day": r["time_of_day"],
-                            "region": r["region"],
-                        }
+                        "details": r,
+                        "text": format_evo_details(r)
                     })
 
             walk(evo_node)

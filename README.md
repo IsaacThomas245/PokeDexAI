@@ -161,9 +161,6 @@ Frontend:
 
 ### High Priority
 - Offensive type matchup reasoning
-- Friendship evolutions
-- Location‑based evolutions
-- Move‑type evolutions
 
 ### Medium Priority
 - Fuzzy matching and spell correction
