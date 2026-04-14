@@ -12,11 +12,16 @@ export default function MessagePokemon({ data }) {
 
       <div>
         <strong>Types:</strong>
-        <ul className="list-disc ml-5">
+        <div className="flex gap-2 mt-1">
           {types.map((t) => (
-            <li key={t}>{t}</li>
+            <img
+              key={t}
+              src={`/type_sprites/${t}.png`}
+              alt={t}
+              className="h-8 w-14"
+            />
           ))}
-        </ul>
+        </div>
       </div>
 
       <div>
