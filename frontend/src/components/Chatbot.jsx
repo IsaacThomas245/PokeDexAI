@@ -1,22 +1,37 @@
 import ChatMessages from "@/components/ChatMessages";
 
-function Chatbot({ messages, isLoading }) {
+function Chatbot({ messages, isLoading, onPromptSelect }) {
+  const categories = [
+    { label: "Pokémon", prompt: "Who is Charizard?" },
+    { label: "Moves", prompt: "What is Earthquake?" },
+    { label: "Types", prompt: "What does Dragon resist?" },
+    { label: "Abilities", prompt: "What does Intimidate do?" },
+    { label: "Evolutions", prompt: "How does Slowpoke evolve?" },
+  ];
+
   return (
     <div className="relative flex flex-col gap-6 pt-6 pb-24">
       {messages.length === 0 && (
-        <div className="mt-3 font-urbanist text-primary-blue text-xl font-light space-y-2">
-          <p>Welcome to your Pokédex Assistant!</p>
-
-          <p>
-            I'm your AI-powered guide to the world of Pokémon. Ask me about
-            moves, types, abilities, evolutions, or any Pokémon you're curious
-            about, and I'll break it down with clear, game-accurate info.
+        <div className="mt-3 font-urbanist space-y-6">
+          <p className="text-primary-blue text-xl font-semibold">
+            What do you want to know?
           </p>
-
-          <p>
-            Whether you're building a competitive team or just exploring the
-            Pokédex, I'm here to help you understand how everything fits
-            together.
+          <div className="flex flex-col gap-3">
+            {categories.map(({ label, prompt }) => (
+              <button
+                key={label}
+                onClick={() => onPromptSelect(prompt)}
+                className="flex justify-between items-center px-4 py-3 rounded-xl border border-primary-blue bg-transparent hover:bg-white/5 transition-colors"
+              >
+                <span className="text-primary-blue font-semibold text-sm">
+                  {label}
+                </span>
+                <span className="text-gray-500 text-sm">{prompt}</span>
+              </button>
+            ))}
+          </div>
+          <p className="text-primary-blue text-xl font-semibold">
+            or type your own question below
           </p>
         </div>
       )}
