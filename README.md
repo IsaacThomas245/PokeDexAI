@@ -166,6 +166,7 @@ Frontend:
 - Fuzzy matching and spell correction
 - Improved evolution chain formatting
 - Additional move metadata
+- Add regional gimmicks (mega, dynamax, z-moves, tera)
 
 ### Future Enhancements
 - Team builder mode
