@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from pokeapi import get_move, get_move_effect, get_type, get_pokemon, get_ability, get_ability_effect, get_evolution_chain, combine_type_matchups
+from pokeapi import get_move, get_move_effect, get_type, get_pokemon, get_ability, get_ability_effect, get_evolution_chain, get_offensive_matchups, get_defensive_matchups, combine_type_matchups, combine_offense_type_matchups
 from nlp import classify_intent
 
 app = Flask(__name__)
@@ -76,10 +76,10 @@ def chat():
 
     if intent == "move_info":
         move = get_move(entity)
-        if move["damage_class"]["name"] != "physical" or move["damage_class"]["name"] != "special":
+        if move["damage_class"]["name"] not in {"physical", "special"}:
             return jsonify({
             "role": "assistant",
-            "content": f"{entity.title()} is a {move['type']['name']}-type {move["damage_class"]["name"]} move.",
+            "content": f"{entity.title()} is a {move['type']['name']}-type {move['damage_class']['name']} move.",
             "type": "move",
             "data": {
                 "name": move["name"],
@@ -126,47 +126,70 @@ def chat():
                 "sprite": p["sprites"]["front_default"] or p["sprites"]["other"]["official-artwork"]["front_default"] or p["sprites"]["other"]["home"]["front_default"]
             }
         })
+    
+    elif intent == "offensive_type_matchup":
+        # entity is a type or pokemon
+        data = get_offensive_matchups(entity)
 
-    elif intent == "type_matchup":
-        # case for dual type matchup(ex: weaknesses of a ghost/dark pokemon)
+        return jsonify({
+            "role": "assistant",
+            "content": f"{entity.title()} offensive matchup:",
+            "type": "type_offense",
+            "data": data
+        })
+    
+    elif intent == "defensive_type_matchup":
+        # entity is a type
+        data = get_defensive_matchups(entity)
+
+        return jsonify({
+            "role": "assistant",
+            "content": f"{entity.title()} defensive matchup:",
+            "type": "type_defense",
+            "data": data
+        })
+
+    elif intent == "dual_type_defensive_matchup":
         if isinstance(entity, list):
             combined = combine_type_matchups(entity)
             return jsonify({
                 "role": "assistant",
-                "content": f"{' / '.join(t.title() for t in entity)} type matchup:",
-                "type": "type",
+                "content": f"{' / '.join(t.title() for t in entity)} defensive matchup:",
+                "type": "type_defense",
+                "data": combined
+            })
+    
+    elif intent == "dual_type_offensive_matchup":
+        if isinstance(entity, list):
+            combined = combine_offense_type_matchups(entity)
+            return jsonify({
+                "role": "assistant",
+                "content": f"{' / '.join(t.title() for t in entity)} offensive matchup:",
+                "type": "type_offense",
                 "data": combined
             })
 
-        # Otherwise, entity is either a pokemon or a single type
-        try:
-            # Try treating entity as a type
-            t = get_type(entity)
-            return jsonify({
-                "role": "assistant",
-                "content": f"{entity.title()} type strengths and weaknesses:",
-                "type": "type",
-                "data": {
-                    "double_damage_to": [x["name"] for x in t["damage_relations"]["double_damage_to"]],
-                    "double_damage_from": [x["name"] for x in t["damage_relations"]["double_damage_from"]],
-                    "half_damage_to": [x["name"] for x in t["damage_relations"]["half_damage_to"]],
-                    "half_damage_from": [x["name"] for x in t["damage_relations"]["half_damage_from"]],
-                    "no_damage_to": [x["name"] for x in t["damage_relations"]["no_damage_to"]],
-                    "no_damage_from": [x["name"] for x in t["damage_relations"]["no_damage_from"]],
-                }
-            })
-        except:
-            pass
-
-        # Otherwise treat entity as a Pokémon
+    elif intent == "pokemon_defense":
         p = get_pokemon(entity)
         types = [t["type"]["name"] for t in p["types"]]
         combined = combine_type_matchups(types)
 
         return jsonify({
             "role": "assistant",
-            "content": f"{entity.title()} is {', '.join(types)} type. Here are its weaknesses and resistances:",
-            "type": "type",
+            "content": f"{entity.title()} is {', '.join(types)} type. Defensive matchup:",
+            "type": "type_defense",
+            "data": combined
+        })
+
+    elif intent == "pokemon_offense":
+        p = get_pokemon(entity)
+        types = [t["type"]["name"] for t in p["types"]]
+        combined = combine_offense_type_matchups(types)
+
+        return jsonify({
+            "role": "assistant",
+            "content": f"{entity.title()} STAB offensive matchup:",
+            "type": "type_offense",
             "data": combined
         })
 

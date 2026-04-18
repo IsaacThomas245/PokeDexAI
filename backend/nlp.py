@@ -15,84 +15,192 @@ def classify_intent(user_message):
         steel, fairy.
 
         Your job is to identify:
-        - what the user is asking about
-        - which entity (move, Pokémon, type, or ability) they mean
+        - the user's intent
+        - the correct entity (type, Pokémon, move, or ability)
 
-        You MUST follow these rules:
+        You MUST follow these rules exactly:
 
+        ------------------------------------------------------------
+        GENERAL JSON RULES (STRICT)
+        ------------------------------------------------------------
+        1. Your response MUST be valid JSON.
+        2. "entity" MUST match the required JSON type for the intent.
+        3. For dual-type intents, "entity" MUST be a JSON array of two
+        separate strings, like this:
+
+        "entity": ["fire", "dark"]
+
+        NEVER return:
+        - "fire,dark"
+        - "fire, dark"
+        - ["fire,dark"]
+        - "fire/dark"
+        - "fire dark"
+
+        4. If the user provides two types in any format, you MUST convert
+        them into a JSON array of two lowercase strings.
+
+        ------------------------------------------------------------
         1. MOVE INFO
-        If the user mentions a move name (e.g. "thunderbolt", "use flamethrower",
-        "what does ice punch do"), classify as "move_info".
-        The entity MUST be the move name in lowercase.
-        Never return null for a move.
+        ------------------------------------------------------------
+        If the user names a specific move (e.g. "thunderbolt",
+        "ice punch", "flamethrower"), classify as "move_info".
 
-        If the user says “fire type move”, “electric move”, etc. but does NOT name
-        a specific move, this is NOT move_info — it is a type matchup question.
+        Entity = move name in lowercase.
 
-        2. TYPE MATCHUP
-        If the user asks about:
-        - weaknesses
-        - resistances
-        - effectiveness
-        - "what hits X"
-        - "what resists X"
-        - "what is X weak to"
-        - "what is X strong against"
-        - "fire type move is effective against"
-        - "what is effective on ghost dark"
-        - "what does fire hit"
-        - "what takes reduced damage from fire"
+        ------------------------------------------------------------
+        2. OFFENSIVE TYPE MATCHUP (single type → offense)
+        ------------------------------------------------------------
+        Classify as "offensive_type_matchup" when the user asks what a
+        TYPE is good *against*, OR what *resists* that type’s attacks.
 
-        classify as "type_matchup".
+        Offensive phrasing includes:
+        - "what is fire effective against"
+        - "what does water hit"
+        - "what types does electric beat"
+        - "what is grass strong against"
+        - "what resists electric"
+        - "what resists fire"
+        - "what takes reduced damage from ice"
+        - "what is resistant to fighting moves"
 
-        Extract all valid types mentioned.
-        If one type appears → entity is ["fire"]
-        If two types appear → entity is ["ghost", "dark"]
+        Entity = single type in lowercase.
 
-        If the user names a Pokémon instead of types (e.g. "what is Tyranitar weak to"),
-        classify as "type_matchup" and set entity to the Pokémon name.
+        ------------------------------------------------------------
+        3. DUAL-TYPE OFFENSIVE MATCHUP (two types → offense)
+        ------------------------------------------------------------
+        Classify as "dual_type_offensive_matchup" when the user asks what
+        a dual-type combination is good *against* OR what *resists* it.
 
-        If the user compares types using subjective language 
-        ("better than", "stronger than", "which is better"), 
-        classify as "unknown".
+        Examples:
+        - "what does fire dark hit"
+        - "what is water flying good against"
+        - "what resists steel fairy"
+        - "what resists ghost poison"
 
+        Entity MUST be a JSON array of two types:
+        ["fire", "dark"]
 
-        3. POKÉMON INFO
-        If the user asks about a Pokémon in general (e.g. "tell me about pikachu",
-        "what type is charizard", "show me bulbasaur"), classify as "pokemon_info".
-        Entity is the Pokémon name in lowercase.
+        ------------------------------------------------------------
+        4. DEFENSIVE TYPE MATCHUP (single type → defense)
+        ------------------------------------------------------------
+        Classify as "defensive_type_matchup" when the user asks what a
+        TYPE is weak to, or what hits it super effectively.
 
-        Do NOT use pokemon_info if the question is specifically about abilities,
-        weaknesses, resistances, or evolutions.
+        Defensive phrasing includes:
+        - "what is fire weak to"
+        - "what hits water super effectively"
+        - "what hurts rock type"
+        - "what is steel weak against"
+        - "what is psychic weak to"
 
-        4. ABILITY INFO
-        If the user mentions an ability name (e.g. "levitate", "intimidate",
-        "what does pressure do"), classify as "ability_info".
-        The entity MUST be the ability name in lowercase.
-        Never return null for an ability.
+        IMPORTANT:
+        “what resists X” is NOT defensive — it is offensive.
 
-        If the user asks for the ability of a Pokémon (e.g.
-        "what is charmander's ability",
-        "what ability does pikachu have",
-        "tell me bulbasaur's abilities"),
-        classify as "ability_info" and set entity to the Pokémon name in lowercase.
+        Entity = single type in lowercase.
 
-        5. EVOLUTION
-        If the user asks how a Pokémon evolves, classify as "evolution_chain".
-        Entity is the Pokémon name in lowercase.
+        ------------------------------------------------------------
+        5. DUAL-TYPE DEFENSIVE MATCHUP (two types → defense)
+        ------------------------------------------------------------
+        Classify as "dual_type_defensive_matchup" when the user asks what
+        a dual-type is weak to or resistant to.
 
-        6. SMALLTALK
+        Examples:
+        - "what is fire dark weak to"
+        - "what hits steel fairy super effectively"
+        - "what hurts bug steel"
+
+        Entity MUST be a JSON array of two types:
+        ["fire", "dark"]
+
+        ------------------------------------------------------------
+        6. POKÉMON OFFENSE (Pokémon → offense)
+        ------------------------------------------------------------
+        Classify as "pokemon_offense" when the user asks what a Pokémon
+        is good *against*, or what types resist its attacks.
+
+        Examples:
+        - "what does charizard hit"
+        - "what is lucario good against"
+        - "what types does gengar beat"
+        - "what resists pikachu's attacks"
+
+        Entity = Pokémon name in lowercase.
+
+        ------------------------------------------------------------
+        7. POKÉMON DEFENSE (Pokémon → defense)
+        ------------------------------------------------------------
+        Classify as "pokemon_defense" when the user asks what a Pokémon
+        is weak to or resistant to.
+
+        Examples:
+        - "what is charizard weak to"
+        - "what hits garchomp super effectively"
+        - "what hurts greninja"
+
+        Entity = Pokémon name in lowercase.
+
+        ------------------------------------------------------------
+        8. POKÉMON INFO
+        ------------------------------------------------------------
+        General Pokémon information:
+
+        - "tell me about pikachu"
+        - "what type is charizard"
+        - "show me bulbasaur"
+
+        Classify as "pokemon_info".
+
+        ------------------------------------------------------------
+        9. ABILITY INFO
+        ------------------------------------------------------------
+        If the user names an ability:
+
+        - "levitate"
+        - "intimidate"
+        - "what does pressure do"
+
+        Classify as "ability_info".
+
+        If the user asks for a Pokémon’s abilities:
+
+        - "what is pikachu's ability"
+        - "what abilities does bulbasaur have"
+
+        Entity = Pokémon name in lowercase.
+
+        ------------------------------------------------------------
+        10. EVOLUTION
+        ------------------------------------------------------------
+        If the user asks how a Pokémon evolves:
+
+        - "how does eevee evolve"
+        - "what does charmander evolve into"
+
+        Classify as "evolution_chain".
+
+        ------------------------------------------------------------
+        11. SMALLTALK
+        ------------------------------------------------------------
         Greetings or casual chat → "smalltalk".
 
-        7. UNKNOWN
-        If unclear → "unknown".
+        ------------------------------------------------------------
+        12. UNKNOWN
+        ------------------------------------------------------------
+        If unclear, or if the user compares types without asking about
+        weaknesses/strengths/effectiveness, classify as "unknown".
 
+        Examples:
+        - "which type is better, fire or water"
+        - "is ghost stronger than dark"
+        - "who would win, charizard or blastoise"
+
+        ------------------------------------------------------------
         Respond ONLY with JSON:
         {
         "intent": "...",
         "entity": ...
         }
-
 
         """
 

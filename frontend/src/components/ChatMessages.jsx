@@ -47,7 +47,8 @@ function ChatMessages({ messages, isLoading }) {
                         {type === "pokemon" && <MessagePokemon data={data} />}
                         {type === "move" && <MessageMove data={data} />}
                         {type === "ability" && <MessageAbility data={data} />}
-                        {type === "type" && <MessageType data={data} />}
+                        {type === "type_offense" && <MessageType data={data} />}
+                        {type === "type_defense" && <MessageType data={data} />}
                         {type === "evolution" && (
                           <MessageEvolution data={data} />
                         )}

@@ -262,7 +262,25 @@ def combine_type_matchups(types):
 
     return result
 
-# for answering questions like "what is effective against tyranitar"
+def combine_offense_type_matchups(types):
+    merged = {
+        "super_effective": set(),
+        "not_very_effective": set(),
+        "no_effect": set()
+    }
+
+    for t in types:
+        rel = get_offensive_matchups(t)
+        merged["super_effective"].update(rel["super_effective"])
+        merged["not_very_effective"].update(rel["not_very_effective"])
+        merged["no_effect"].update(rel["no_effect"])
+
+    return {
+        "super_effective": sorted(merged["super_effective"]),
+        "not_very_effective": sorted(merged["not_very_effective"]),
+        "no_effect": sorted(merged["no_effect"]),
+    }
+
 def get_offensive_matchups(attacking_type):
     t = get_type(attacking_type)
     rel = t["damage_relations"]
@@ -271,6 +289,16 @@ def get_offensive_matchups(attacking_type):
         "super_effective": [x["name"] for x in rel["double_damage_to"]],
         "not_very_effective": [x["name"] for x in rel["half_damage_to"]],
         "no_effect": [x["name"] for x in rel["no_damage_to"]],
+    }
+
+def get_defensive_matchups(defensive_type):
+    t = get_type(defensive_type)
+    rel = t["damage_relations"]
+
+    return {
+        "double_damage_from": [x["name"] for x in rel["double_damage_from"]],
+        "half_damage_from": [x["name"] for x in rel["half_damage_from"]],
+        "no_damage_from": [x["name"] for x in rel["no_damage_from"]],
     }
 
 

@@ -1,20 +1,80 @@
 export default function MessageType({ data }) {
   if (!data) return null;
 
-  // Pokemon combined matchup (4x, 2x, 1/2x, 1/4x, immune)
-  const isCombined =
+  console.log("MessageType received:", data);
+
+  // offense
+  const isOffense =
+    data.super_effective || data.not_very_effective || data.no_effect;
+
+  if (isOffense) {
+    return (
+      <div className="markdown-container mt-2 text-sm space-y-2">
+        {data.super_effective?.length > 0 && (
+          <div>
+            <strong>Super effective against:</strong>
+            <ul className="list-disc ml-5">
+              {data.super_effective.map((t) => (
+                <img
+                  key={t}
+                  src={`/type_sprites/${t}.png`}
+                  alt={t}
+                  className="h-8 w-14"
+                />
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {data.not_very_effective?.length > 0 && (
+          <div>
+            <strong>Not very effective against:</strong>
+            <ul className="list-disc ml-5">
+              {data.not_very_effective.map((t) => (
+                <img
+                  key={t}
+                  src={`/type_sprites/${t}.png`}
+                  alt={t}
+                  className="h-8 w-14"
+                />
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {data.no_effect?.length > 0 && (
+          <div>
+            <strong>No effect on:</strong>
+            <ul className="list-disc ml-5">
+              {data.no_effect.map((t) => (
+                <img
+                  key={t}
+                  src={`/type_sprites/${t}.png`}
+                  alt={t}
+                  className="h-8 w-14"
+                />
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // dual type defense
+  const isCombinedDefense =
     data.quadruple_weak_to ||
     data.double_weak_to ||
     data.half_resistant_to ||
     data.quarter_resistant_to ||
     data.immune_to;
 
-  if (isCombined) {
+  if (isCombinedDefense) {
     return (
       <div className="markdown-container mt-2 text-sm space-y-2">
         {data.quadruple_weak_to?.length > 0 && (
           <div>
-            <strong>4x Weak to:</strong>
+            <strong>4× Weak to:</strong>
             <ul className="list-disc ml-5">
               {data.quadruple_weak_to.map((t) => (
                 <img
@@ -30,7 +90,7 @@ export default function MessageType({ data }) {
 
         {data.double_weak_to?.length > 0 && (
           <div>
-            <strong>2x Weak to:</strong>
+            <strong>2× Weak to:</strong>
             <ul className="list-disc ml-5">
               {data.double_weak_to.map((t) => (
                 <img
@@ -95,7 +155,7 @@ export default function MessageType({ data }) {
     );
   }
 
-  // Type → Type matchups (double_damage_from, half_damage_from, etc.)
+  // single type defense
   return (
     <div className="markdown-container mt-2 text-sm space-y-2">
       {data.double_damage_from?.length > 0 && (
