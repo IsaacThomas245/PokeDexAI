@@ -259,13 +259,21 @@ def chat():
             "data": None
         })
     
+    elif intent == "unknown":
+        return jsonify({
+            "role": "assistant",
+            "content": "Hmm… I couldn't understand that.",
+            "type": "unknown",
+            "data": None
+        })
+    
     else:
         return jsonify({
-        "role": "assistant",
-        "content": "I'm not sure what you meant. Try asking about a Pokémon, move, type, or ability.",
-        "type": "error",
-        "data": None
-    })
+            "role": "assistant",
+            "content": "I'm not sure what you meant. Try asking about a Pokémon, move, type, or ability.",
+            "type": "error",
+            "data": None
+        })
 
 
 if __name__ == "__main__":

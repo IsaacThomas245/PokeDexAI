@@ -9,6 +9,7 @@ import MessageType from "./chat/MessageType";
 import MessageEvolution from "./chat/MessageEvolution";
 import MessageText from "./chat/MessageText";
 import MessageError from "./chat/MessageError";
+import MessageUnknown from "./chat/MessageUnknown";
 import PokedexBox from "./PokedexBox";
 
 function ChatMessages({ messages, isLoading }) {
@@ -54,6 +55,7 @@ function ChatMessages({ messages, isLoading }) {
                         )}
                         {type === "text" && <MessageText data={data} />}
                         {type === "error" && <MessageError />}
+                        {type === "unknown" && <MessageUnknown />}
                       </PokedexBox>
                     )}
                   </>
