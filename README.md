@@ -4,7 +4,7 @@
 
 Pokedex AI is a full‑stack AI‑powered Pokémon assistant built with Flask, React, and an OpenAI‑driven NLP classifier.
 
-The system provides structured, game‑accurate Pokémon data through natural‑language queries. It supports move details, defensive type matchups, Pokémon summaries, ability information (including hidden abilities), and basic evolution chains. The project emphasizes clean API design, real Pokémon mechanics, and a conversational interface.
+The system provides structured, game‑accurate Pokémon data through natural‑language queries. It supports move details, offensive and defensive type matchups (including dual‑type combinations), Pokémon summaries, ability information (including hidden abilities), and complete evolution chains. The project emphasizes clean API design, real Pokémon mechanics, and a conversational interface.
 
 ---
 
@@ -34,12 +34,14 @@ The assistant interprets user questions and routes them to the correct backend e
 
 - Move details
 - Pokémon summaries
+- Offensive type matchups
 - Defensive type matchups
+- Dual‑type offensive and defensive matchups
 - Ability information
-- Basic evolution chains
+- Complete evolution chains
 - Smalltalk
 
-The NLP classifier extracts entities such as Pokémon names, move names, ability names, and types.
+The NLP classifier extracts entities such as Pokémon names, move names, ability names, and types (single or dual).
 
 ---
 
@@ -57,17 +59,29 @@ Move descriptions automatically adjust based on category.
 
 ---
 
-### Defensive Type Matchups
+### Type Matchups (Offense + Defense)
 
-Currently supports defensive matchup reasoning:
+Supports full matchup reasoning for both **offense** and **defense**, including dual‑type combinations.
+
+#### Defensive Examples:
 
 - “What is Fire weak to”
-- “What resists Water”
+- “What hits Water super effectively”
 - “What is Tyranitar weak to”
 
-Dual‑type defensive logic is implemented through a type‑combination function.
+#### Offensive Examples:
 
-Note: Offensive matchup reasoning (e.g., “What does Fire hit super effectively”) is not yet implemented.
+- “What is Fire effective against”
+- “What resists Electric”
+- “What does Charizard hit”
+
+#### Dual‑Type Examples:
+
+- “What is Fire/Dark weak to”
+- “What does Water/Flying hit”
+- “What resists Steel/Fairy”
+
+Dual‑type logic is implemented through type‑combination functions for both offense and defense.
 
 ---
 
@@ -85,21 +99,28 @@ For any ability:
 
 ---
 
-### Evolution Chains (Basic)
+### Evolution Chains (Complete)
 
-Supports:
+All evolution methods from the PokéAPI are now fully supported, including:
 
 - Level‑based evolutions
 - Item‑based evolutions
 - Time‑of‑day evolutions
+- Friendship evolutions (e.g., Riolu, Eevee → Sylveon)
+- Location‑based evolutions (e.g., Leafeon, Glaceon)
+- Move‑type evolutions (e.g., Sylveon)
+- Gender‑specific evolutions
+- Trade evolutions
+- Trade‑with‑item evolutions
+- Stat‑based evolutions (e.g., Attack > Defense)
+- Overworld‑weather evolutions
+- Step‑based evolutions
+- Move‑usage evolutions
+- Region‑specific evolutions
+- Form‑specific evolutions
+- All special‑case edge conditions
 
-Not yet implemented:
-
-- Friendship evolutions (Riolu, Eevee → Sylveon)
-- Location evolutions (Leafeon, Glaceon)
-- Move‑type evolutions (Sylveon)
-
-These are planned improvements.
+The backend now parses **100% of PokéAPI’s EvolutionDetail fields** and produces clean, human‑readable evolution requirements.
 
 ---
 
@@ -118,14 +139,14 @@ Handles greetings and simple conversational prompts.
 
 ### Backend Endpoints
 
-| Route                     | Description                 |
-| ------------------------- | --------------------------- |
-| `/move/<name>`            | Move details                |
-| `/type/<type>`            | Defensive type matchup data |
-| `/pokemon/<name>`         | Pokémon summary             |
-| `/pokemon-species/<name>` | Evolution chain             |
-| `/ability/<name>`         | Ability details             |
-| `/chat`                   | NLP‑powered chat endpoint   |
+| Route                     | Description                         |
+| ------------------------- | ----------------------------------- |
+| `/move/<name>`            | Move details                        |
+| `/type/<type>`            | Type matchup data (offense/defense) |
+| `/pokemon/<name>`         | Pokémon summary                     |
+| `/pokemon-species/<name>` | Evolution chain                     |
+| `/ability/<name>`         | Ability details                     |
+| `/chat`                   | NLP‑powered chat endpoint           |
 
 ---
 
@@ -135,7 +156,12 @@ The classifier identifies:
 
 - `move_info`
 - `pokemon_info`
-- `type_matchup` (defensive only)
+- `pokemon_offense`
+- `pokemon_defense`
+- `offensive_type_matchup`
+- `defensive_type_matchup`
+- `dual_type_offensive_matchup`
+- `dual_type_defensive_matchup`
 - `ability_info`
 - `evolution_chain`
 - `smalltalk`
@@ -146,12 +172,13 @@ It extracts:
 - Pokémon names
 - Move names
 - Ability names
-- Types (single or dual)
+- Types (single or dual, strictly JSON arrays for dual types)
 
 The classifier includes logic for:
 
 - Pokémon ability queries
 - Dual‑type extraction
+- Offensive vs defensive phrasing
 - Unknown intent fallthrough
 - Avoiding misclassification of subjective comparisons  
   (e.g., “Is fire better than water” → unknown)
