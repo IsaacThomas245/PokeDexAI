@@ -7,48 +7,85 @@ client = OpenAI()
 
 def classify_intent(user_message):
     system_prompt = """
-        You classify user messages into Pokémon-related intents. 
-        Respond ONLY with valid JSON in this format:
+        You classify user messages into Pokémon-related intents.
+        Respond ONLY with valid JSON in this exact format:
         {"intent": "...", "entity": ...}
 
-        INTENTS:
-        - move_info → user asks about a move (e.g. “thunderbolt”, “what does flamethrower do”)
+        INTENTS
+        -------
+
+        move_info  
+        User asks about a move.
+        Examples: “thunderbolt”, “what does flamethrower do”
         entity = move name (string)
 
-        - pokemon_info → user asks about a Pokémon's info or type (e.g. “what type is pikachu”)
-        entity = Pokémon name (string)
+        pokemon_info  
+        User asks about a Pokémon's info, identity, description, or type.
+        Includes:
+        - “what type is pikachu”
+        - “tell me about bulbasaur”
+        - “who is charizard”
+        - “who is slowking”
+        - “who is galarian slowking”
+        - “what is mewtwo”
+        - “describe greninja”
+        entity = Pokémon name (string, lowercase)
 
-        - offensive_type_matchup → user asks what a type is good against OR what resists that type
-        entity = type (string)
+        offensive_type_matchup  
+        User asks what a type is good against OR what resists that type.
+        Examples: “what is fire good against”, “what resists electric”
+        entity = type (string, lowercase)
 
-        - defensive_type_matchup → user asks what a type is weak to OR what hits it super effectively
-        entity = type (string)
+        defensive_type_matchup  
+        User asks what a type is weak to OR what hits it super effectively.
+        Examples: “what is fire weak to”, “what hits water super effectively”
+        entity = type (string, lowercase)
 
-        - dual_type_offensive_matchup → same as offensive but with TWO types
+        dual_type_offensive_matchup  
+        Same as offensive, but with two types.
+        Examples: “what does fire dark hit”, “what resists steel fairy”
         entity = ["type1", "type2"]
 
-        - dual_type_defensive_matchup → same as defensive but with TWO types
+        dual_type_defensive_matchup  
+        Same as defensive, but with two types.
+        Examples: “what is steel fairy weak to”, “what hurts bug steel”
         entity = ["type1", "type2"]
 
-        - pokemon_offense → user asks what a Pokémon is good against
+        pokemon_offense  
+        User asks what a Pokémon is good against.
+        Examples: “what does charizard hit”, “what is lucario good against”
         entity = Pokémon name (string)
 
-        - pokemon_defense → user asks what a Pokémon is weak to
+        pokemon_defense  
+        User asks what a Pokémon is weak to.
+        Examples: “what is charizard weak to”, “what hurts garchomp”
         entity = Pokémon name (string)
 
-        - ability_info → user asks about an ability OR a Pokémon's abilities
+        ability_info  
+        User asks about an ability OR a Pokémon's abilities.
+        Examples: “what does levitate do”, “what abilities does bulbasaur have”
         entity = ability or Pokémon name (string)
 
-        - evolution_chain → user asks how a Pokémon evolves
+        evolution_chain  
+        User asks how a Pokémon evolves.
+        Examples: “how does eevee evolve”, “what does charmander evolve into”
         entity = Pokémon name (string)
 
-        - smalltalk → greetings or casual chat (“hi”, “hello”, “what's up”)
+        smalltalk  
+        Greetings or casual chat.
+        Examples: “hi”, “hello”, “what's up”
 
-        - unknown → anything else
+        unknown  
+        Anything else, including:
+        - type comparisons (“is fire better than water”)
+        - battle hypotheticals (“who would win charizard or blastoise”)
+        - non-Pokémon questions
 
-        RULES:
+        RULES
+        -----
         - Types must be lowercase.
         - Dual types must be a JSON array of two strings.
+        - Pokémon names must be lowercase.
         - NEVER include explanations.
         - NEVER include extra text.
         - ONLY output the JSON object.
