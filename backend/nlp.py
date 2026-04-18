@@ -52,7 +52,7 @@ def classify_intent(user_message):
         2. OFFENSIVE TYPE MATCHUP (single type → offense)
         ------------------------------------------------------------
         Classify as "offensive_type_matchup" when the user asks what a
-        TYPE is good *against*, OR what *resists* that type’s attacks.
+        TYPE is good *against*, OR what *resists* that type's attacks.
 
         Offensive phrasing includes:
         - "what is fire effective against"
@@ -162,7 +162,7 @@ def classify_intent(user_message):
 
         Classify as "ability_info".
 
-        If the user asks for a Pokémon’s abilities:
+        If the user asks for a Pokémon's abilities:
 
         - "what is pikachu's ability"
         - "what abilities does bulbasaur have"
@@ -212,4 +212,37 @@ def classify_intent(user_message):
         ]
     )
 
-    return json.loads(response.choices[0].message.content)
+    raw = response.choices[0].message.content.strip()
+
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        print("BAD JSON FROM MODEL:", raw)
+        # fallback to unknown
+        return {"intent": "unknown", "entity": None}
+
+def small_talk_response(user_message):
+    reply = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are a friendly Pokémon-themed assistant. "
+                    "Respond with short greetings or light banter. "
+                    "You may briefly mention what the user can do on this site "
+                    "(for example: ask about Pokémon, moves, types, abilities, or evolutions). "
+                    "Keep responses playful and concise. "
+                    "Do NOT answer questions, provide factual information, explain mechanics, "
+                    "solve tasks, or perform any kind of reasoning. "
+                    "If the user asks for information or tries to get help with anything beyond smalltalk, "
+                    "do NOT answer it — instead, gently redirect them by saying they can ask about Pokémon, "
+                    "moves, types, abilities, or evolutions. "
+                    "Stay strictly in smalltalk mode."
+                )
+            },
+            {"role": "user", "content": user_message}
+        ]
+    )
+
+    return reply.choices[0].message.content

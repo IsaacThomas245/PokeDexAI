@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pokeapi import get_move, get_move_effect, get_type, get_pokemon, get_ability, get_ability_effect, get_evolution_chain, get_offensive_matchups, get_defensive_matchups, combine_type_matchups, combine_offense_type_matchups
-from nlp import classify_intent
+from nlp import classify_intent, small_talk_response
 
 app = Flask(__name__)
 CORS(app)
@@ -250,9 +250,11 @@ def chat():
         })
     
     elif intent == "smalltalk":
+        reply = small_talk_response(user_message)
+
         return jsonify({
             "role": "assistant",
-            "content": "Hey! Ask me about any Pokémon, move, type, ability, or evolution.",
+            "content": reply,
             "type": "text",
             "data": None
         })
