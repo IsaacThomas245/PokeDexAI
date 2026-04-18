@@ -1,5 +1,6 @@
 import requests
 import copy
+from functools import lru_cache
 
 BASE_URL = "https://pokeapi.co/api/v2"
 REGIONAL_SUFFIXES = ["hisui", "galar", "alola", "paldea"]
@@ -24,18 +25,15 @@ def get_english_entry(entries, key):
             return entry.get(key)
     return None
 
+@lru_cache(maxsize=256)
 def get_sprite(name):
-    if name in sprite_cache:
-        return sprite_cache[name]
-    
     p = get_pokemon(name)
     s = p["sprites"]
 
-    sprite = s.get("front_default") or s["other"]["official-artwork"].get("front_default") or s["other"]["home"].get("front_default")
-    sprite_cache[name] = sprite
-
     return (
-        sprite
+        s.get("front_default")
+        or s["other"]["official-artwork"].get("front_default")
+        or s["other"]["home"].get("front_default")
     )
 
 def format_evo_details(d):
