@@ -9,15 +9,16 @@ The system provides structured, game‑accurate Pokémon data through natural‑
 ---
 
 ## Deployment
+
 Pokedex AI is deployed using a split‑service architecture:
 
 - Frontend  
-Hosted on Vercel  
-https://pokedexai.me
+  Hosted on Vercel  
+  https://pokedexai.me
 
 - Backend API  
-Hosted on Render  
-https://api.pokedexai.me
+  Hosted on Render  
+  https://api.pokedexai.me
 
 This service powers all data retrieval, NLP routing, PokéAPI normalization, and structured responses.
 
@@ -28,7 +29,9 @@ The live deployment reflects the current state of the project and updates automa
 ## Features (Current)
 
 ### Natural Language Querying
+
 The assistant interprets user questions and routes them to the correct backend endpoint. Supported queries include:
+
 - Move details
 - Pokémon summaries
 - Defensive type matchups
@@ -41,7 +44,9 @@ The NLP classifier extracts entities such as Pokémon names, move names, ability
 ---
 
 ### Move Information
+
 The backend returns structured move data:
+
 - Type
 - Category (physical, special, status)
 - Power (omitted for status moves)
@@ -53,7 +58,9 @@ Move descriptions automatically adjust based on category.
 ---
 
 ### Defensive Type Matchups
+
 Currently supports defensive matchup reasoning:
+
 - “What is Fire weak to”
 - “What resists Water”
 - “What is Tyranitar weak to”
@@ -65,23 +72,29 @@ Note: Offensive matchup reasoning (e.g., “What does Fire hit super effectively
 ---
 
 ### Ability Information
+
 For any Pokémon:
+
 - Lists all abilities
 - Labels hidden abilities
 - Includes effect descriptions
 
 For any ability:
+
 - Returns the ability’s effect text
 
 ---
 
 ### Evolution Chains (Basic)
+
 Supports:
+
 - Level‑based evolutions
 - Item‑based evolutions
 - Time‑of‑day evolutions
 
 Not yet implemented:
+
 - Friendship evolutions (Riolu, Eevee → Sylveon)
 - Location evolutions (Leafeon, Glaceon)
 - Move‑type evolutions (Sylveon)
@@ -91,33 +104,35 @@ These are planned improvements.
 ---
 
 ### Smalltalk
+
 Handles greetings and simple conversational prompts.
 
 ---
 
 ## Architecture
-- frontend/     → React (Vite) UI
-- backend/      → Flask API
-- nlp/          → Intent classifier using OpenAI
-- pokeapi/      → Wrapper around PokéAPI with normalization helpers
 
+- frontend/ → React (Vite) UI
+- backend/ → Flask API
+- nlp/ → Intent classifier using OpenAI
+- pokeapi/ → Wrapper around PokéAPI with normalization helpers
 
 ### Backend Endpoints
 
-| Route | Description |
-|-------|-------------|
-| `/move/<name>` | Move details |
-| `/type/<type>` | Defensive type matchup data |
-| `/pokemon/<name>` | Pokémon summary |
-| `/pokemon-species/<name>` | Evolution chain |
-| `/ability/<name>` | Ability details |
-| `/chat` | NLP‑powered chat endpoint |
+| Route                     | Description                 |
+| ------------------------- | --------------------------- |
+| `/move/<name>`            | Move details                |
+| `/type/<type>`            | Defensive type matchup data |
+| `/pokemon/<name>`         | Pokémon summary             |
+| `/pokemon-species/<name>` | Evolution chain             |
+| `/ability/<name>`         | Ability details             |
+| `/chat`                   | NLP‑powered chat endpoint   |
 
 ---
 
 ## NLP Intent Classification
 
 The classifier identifies:
+
 - `move_info`
 - `pokemon_info`
 - `type_matchup` (defensive only)
@@ -127,12 +142,14 @@ The classifier identifies:
 - `unknown`
 
 It extracts:
+
 - Pokémon names
 - Move names
 - Ability names
 - Types (single or dual)
 
 The classifier includes logic for:
+
 - Pokémon ability queries
 - Dual‑type extraction
 - Unknown intent fallthrough
@@ -159,16 +176,15 @@ Frontend:
 
 ## Roadmap
 
-### High Priority
-- Offensive type matchup reasoning
-
 ### Medium Priority
+
 - Fuzzy matching and spell correction
 - Improved evolution chain formatting
 - Additional move metadata
 - Add regional gimmicks (mega, dynamax, z-moves, tera)
 
 ### Future Enhancements
+
 - Team builder mode
 - Competitive analysis tools
 - Voice input
