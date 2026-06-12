@@ -4,7 +4,7 @@ import Chatbot from "@/components/Chatbot";
 import ChatInput from "@/components/ChatInput";
 import api from "@/api";
 import logo from "@/assets/images/logo.svg";
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const [messages, setMessages] = useImmer([]);
